@@ -1,3 +1,4 @@
+
 import React from "react";
 import { SiteHeader } from "./SiteHeader";
 import { ChapterPanel } from "./ChapterPanel";
@@ -21,7 +22,7 @@ export const SiteReport: React.FC = () => {
       <div className="flex w-full gap-6 flex-wrap px-[120px]">
         <ChapterPanel />
         <div className="min-w-60 flex-1 shrink basis-[0%]">
-          <DataSection title="Overview">
+          <DataSection title="Overview" id="overview">
             <div className="flex gap-4 text-black flex-wrap mt-4">
               <InfoCard label="Project size" value="200 MW" />
               <InfoCard label="Project size" value="200 MW" />
@@ -57,7 +58,7 @@ export const SiteReport: React.FC = () => {
             </div>
           </DataSection>
 
-          <DataSection title="Proximity" className="mt-10">
+          <DataSection title="Proximity" id="proximity" className="mt-10">
             <div className="flex gap-4 text-black flex-wrap mt-4">
               <InfoCard
                 label="Closest freeway"
@@ -90,7 +91,7 @@ export const SiteReport: React.FC = () => {
             />
           </DataSection>
 
-          <DataSection title="Power" className="mt-10">
+          <DataSection title="Power" id="power" className="mt-10">
             <div className="border border-[color:var(--border-border-subtle,#F0F0F0)] shadow-[0px_1px_4px_-2px_rgba(20,20,20,0.08),0px_4px_4px_-2px_rgba(20,20,20,0.04)] bg-white w-full overflow-hidden mt-4 p-6 rounded-lg border-solid">
               <div className="w-[135px] max-w-full text-base font-semibold whitespace-nowrap tracking-[-0.32px] leading-none">
                 Optimal

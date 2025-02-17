@@ -1,10 +1,21 @@
+
 import React from "react";
 import { MetricBar } from "./MetricBar";
 
 export const ChapterPanel: React.FC = () => {
+  const handleBlockClick = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="border border-[color:var(--border-border-base,#E5E5E5)] shadow-[0px_6px_12px_-6px_rgba(20,20,20,0.08),0px_8px_24px_-4px_rgba(20,20,20,0.04)] bg-neutral-50 overflow-hidden w-[188px] rounded-xl border-solid">
-      <div className="bg-white border-neutral-200 flex w-full items-stretch gap-5 overflow-hidden text-black px-0.5 border-b">
+    <div className="border border-[color:var(--border-border-base,#E5E5E5)] shadow-[0px_6px_12px_-6px_rgba(20,20,20,0.08),0px_8px_24px_-4px_rgba(20,20,20,0.04)] bg-neutral-50 overflow-hidden w-[188px] rounded-xl border-solid sticky top-24 h-fit">
+      <div 
+        className="bg-white border-neutral-200 flex w-full items-stretch gap-5 overflow-hidden text-black px-0.5 border-b cursor-pointer transition-colors hover:bg-neutral-100"
+        onClick={() => handleBlockClick("overview")}
+      >
         <div className="w-1 shrink-0 h-[76px] border-[rgba(28,28,28,1)] border-solid border-4" />
         <div className="my-auto">
           <div className="text-sm font-semibold leading-none tracking-[-0.28px]">
@@ -21,7 +32,10 @@ export const ChapterPanel: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="bg-neutral-50 border-neutral-200 flex w-full flex-col overflow-hidden items-stretch justify-center px-[19px] py-4 border-b">
+      <div 
+        className="bg-neutral-50 border-neutral-200 flex w-full flex-col overflow-hidden items-stretch justify-center px-[19px] py-4 border-b cursor-pointer transition-colors hover:bg-neutral-100"
+        onClick={() => handleBlockClick("proximity")}
+      >
         <div>
           <div className="text-black text-sm font-semibold leading-none tracking-[-0.28px]">
             Proximity
@@ -34,7 +48,10 @@ export const ChapterPanel: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="bg-neutral-50 border-neutral-200 flex w-full flex-col overflow-hidden items-stretch justify-center px-[19px] py-4 border-b">
+      <div 
+        className="bg-neutral-50 border-neutral-200 flex w-full flex-col overflow-hidden items-stretch justify-center px-[19px] py-4 border-b cursor-pointer transition-colors hover:bg-neutral-100"
+        onClick={() => handleBlockClick("power")}
+      >
         <div>
           <div className="text-black text-sm font-semibold leading-none tracking-[-0.28px]">
             Power

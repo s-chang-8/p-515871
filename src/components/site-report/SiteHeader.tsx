@@ -1,8 +1,9 @@
+
 import React from "react";
 
 export const SiteHeader: React.FC = () => {
   return (
-    <div className="bg-neutral-50 flex min-h-16 w-full items-center gap-[40px_100px] overflow-hidden justify-between flex-wrap px-[120px] py-4">
+    <div className="bg-neutral-50 flex min-h-16 w-full items-center gap-[40px_100px] overflow-hidden justify-between flex-wrap px-[120px] py-4 sticky top-0 z-50">
       <div className="text-black text-xl font-semibold leading-[1.2] tracking-[-0.4px] self-stretch my-auto">
         Data Center Site
       </div>
