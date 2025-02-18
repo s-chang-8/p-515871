@@ -6,6 +6,7 @@ import { InfoCard } from "./InfoCard";
 import { DataSection } from "./DataSection";
 import { MapView } from "./MapView";
 import { DataGrid } from "./DataGrid";
+import { RiskLevelDropdown } from "./RiskLevelDropdown";
 import { toast } from "sonner";
 
 export const SiteReport: React.FC = () => {
@@ -13,16 +14,36 @@ export const SiteReport: React.FC = () => {
   const [originalData, setOriginalData] = useState({
     projectSize1: "200 MW",
     projectSize2: "200 MW",
+    feasibilityLevel: "very feasible",
     feasibilityText: "Located within an Opportunity Zone, the site benefits from a multitude of tax benefits.",
-    siteInfo: [
-      { label: "Address", value: "123 Orange way" },
-      { label: "Power", value: "xxx" },
-      { label: "Zoning", value: "xxxx" },
-      { label: "Size", value: "xxxx" },
-      { label: "County", value: "xxxx" },
-    ],
-    proximityText: "Multiple airports nearby, multiple data center sites close by, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    powerText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    siteInfo1: {
+      title: "Site information",
+      data: [
+        { label: "Address", value: "123 Orange way" },
+        { label: "Power", value: "xxx" },
+        { label: "Zoning", value: "xxxx" },
+      ],
+    },
+    siteInfo2: {
+      title: "Additional information",
+      data: [
+        { label: "Size", value: "xxxx" },
+        { label: "County", value: "xxxx" },
+        { label: "Status", value: "Active" },
+      ],
+    },
+    proximityLevel: "optimal",
+    proximityText: "Multiple airports nearby, multiple data center sites close by...",
+    proximityCard1: {
+      label: "Closest freeway",
+      value: "Orange highway (2 miles)"
+    },
+    proximityCard2: {
+      label: "Closest airport",
+      value: "International Airport (5 miles)"
+    },
+    powerLevel: "optimal",
+    powerText: "Lorem ipsum dolor sit amet...",
     overviewMapUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true",
     proximityMapUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true",
   });
@@ -46,12 +67,30 @@ export const SiteReport: React.FC = () => {
     }));
   };
 
-  const handleSiteInfoEdit = (index: number, field: "label" | "value", value: string) => {
+  const handleSiteInfoEdit = (section: "siteInfo1" | "siteInfo2", title: string) => {
     setEditData(prev => ({
       ...prev,
-      siteInfo: prev.siteInfo.map((item, i) => 
-        i === index ? { ...item, [field]: value } : item
-      )
+      [section]: {
+        ...prev[section],
+        title
+      }
+    }));
+  };
+
+  const handleSiteInfoDataEdit = (
+    section: "siteInfo1" | "siteInfo2",
+    index: number,
+    field: "label" | "value",
+    value: string
+  ) => {
+    setEditData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        data: prev[section].data.map((item, i) =>
+          i === index ? { ...item, [field]: value } : item
+        )
+      }
     }));
   };
 
@@ -105,7 +144,11 @@ export const SiteReport: React.FC = () => {
         onSave={handleSave}
       />
       <div className="flex w-full gap-6 flex-wrap px-[120px]">
-        <ChapterPanel />
+        <ChapterPanel 
+          feasibilityLevel={editData.feasibilityLevel}
+          proximityLevel={editData.proximityLevel}
+          powerLevel={editData.powerLevel}
+        />
         <div className="min-w-60 flex-1 shrink basis-[0%]">
           <DataSection title="Overview" id="overview">
             <div className="flex gap-4 text-black flex-wrap mt-4">
@@ -114,27 +157,24 @@ export const SiteReport: React.FC = () => {
                 value={editData.projectSize1}
                 editable={isEditing}
                 onValueChange={(value) => handleEdit("projectSize1", value)}
+                onLabelChange={(value) => handleEdit("projectSize1Label", value)}
               />
               <InfoCard 
                 label="Project size" 
                 value={editData.projectSize2}
                 editable={isEditing}
                 onValueChange={(value) => handleEdit("projectSize2", value)}
+                onLabelChange={(value) => handleEdit("projectSize2Label", value)}
               />
             </div>
 
             <div className="border border-[color:var(--border-border-subtle,#F0F0F0)] shadow-[0px_1px_4px_-2px_rgba(20,20,20,0.08),0px_4px_4px_-2px_rgba(20,20,20,0.04)] bg-white w-full overflow-hidden text-black mt-4 p-6 rounded-lg border-solid">
-              <div className="w-[135px] max-w-full text-base font-semibold tracking-[-0.32px] leading-none">
-                <div className="flex w-full items-center gap-2">
-                  <div>Very feasible</div>
-                  <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/977db347aa76800b7f45d135788b39ede54bd781ad7b694cb20dd8913585710b?placeholderIfAbsent=true"
-                    className="aspect-[1] object-contain w-4 self-stretch shrink-0 my-auto"
-                    alt=""
-                  />
-                </div>
-              </div>
+              <RiskLevelDropdown
+                value={editData.feasibilityLevel}
+                onChange={(value) => handleEdit("feasibilityLevel", value)}
+                type="feasibility"
+                editable={isEditing}
+              />
               <EditableText
                 value={editData.feasibilityText}
                 onChange={(value) => handleEdit("feasibilityText", value)}
@@ -150,17 +190,19 @@ export const SiteReport: React.FC = () => {
 
             <div className="border border-[color:var(--border-border-subtle,#F0F0F0)] shadow-[0px_1px_4px_-2px_rgba(20,20,20,0.08),0px_4px_4px_-2px_rgba(20,20,20,0.04)] bg-white flex w-full gap-[40px_64px] overflow-hidden text-black flex-wrap mt-4 p-6 rounded-lg border-solid">
               <DataGrid 
-                title="Site information" 
-                data={editData.siteInfo} 
+                title={editData.siteInfo1.title}
+                data={editData.siteInfo1.data}
                 editable={isEditing}
-                onEdit={handleSiteInfoEdit}
+                onTitleEdit={(title) => handleSiteInfoEdit("siteInfo1", title)}
+                onEdit={(index, field, value) => handleSiteInfoDataEdit("siteInfo1", index, field, value)}
               />
               <div className="border w-0 shrink h-[188px] grow border-[rgba(240,240,240,1)] border-solid" />
               <DataGrid 
-                title="Site information" 
-                data={editData.siteInfo}
+                title={editData.siteInfo2.title}
+                data={editData.siteInfo2.data}
                 editable={isEditing}
-                onEdit={handleSiteInfoEdit}
+                onTitleEdit={(title) => handleSiteInfoEdit("siteInfo2", title)}
+                onEdit={(index, field, value) => handleSiteInfoDataEdit("siteInfo2", index, field, value)}
               />
             </div>
           </DataSection>
@@ -168,25 +210,30 @@ export const SiteReport: React.FC = () => {
           <DataSection title="Proximity" id="proximity" className="mt-10">
             <div className="flex gap-4 text-black flex-wrap mt-4">
               <InfoCard
-                label="Closest freeway"
-                value="Orange highway (2 miles)"
+                label={editData.proximityCard1.label}
+                value={editData.proximityCard1.value}
                 className="pl-6 py-6"
                 editable={isEditing}
-                onValueChange={(value) => {}}
+                onValueChange={(value) => handleEdit("proximityCard1Value", value)}
+                onLabelChange={(value) => handleEdit("proximityCard1Label", value)}
               />
               <InfoCard
-                label="Closest freeway"
-                value="Orange highway (2 miles)"
+                label={editData.proximityCard2.label}
+                value={editData.proximityCard2.value}
                 className="pl-6 py-6"
                 editable={isEditing}
-                onValueChange={(value) => {}}
+                onValueChange={(value) => handleEdit("proximityCard2Value", value)}
+                onLabelChange={(value) => handleEdit("proximityCard2Label", value)}
               />
             </div>
 
             <div className="border border-[color:var(--border-border-subtle,#F0F0F0)] shadow-[0px_1px_4px_-2px_rgba(20,20,20,0.08),0px_4px_4px_-2px_rgba(20,20,20,0.04)] bg-white w-full overflow-hidden text-black mt-4 p-6 rounded-lg border-solid">
-              <div className="w-[135px] max-w-full text-base font-semibold whitespace-nowrap tracking-[-0.32px] leading-none">
-                Optimal
-              </div>
+              <RiskLevelDropdown
+                value={editData.proximityLevel}
+                onChange={(value) => handleEdit("proximityLevel", value)}
+                type="optimal"
+                editable={isEditing}
+              />
               <EditableText
                 value={editData.proximityText}
                 onChange={(value) => handleEdit("proximityText", value)}
@@ -204,9 +251,12 @@ export const SiteReport: React.FC = () => {
 
           <DataSection title="Power" id="power" className="mt-10">
             <div className="border border-[color:var(--border-border-subtle,#F0F0F0)] shadow-[0px_1px_4px_-2px_rgba(20,20,20,0.08),0px_4px_4px_-2px_rgba(20,20,20,0.04)] bg-white w-full overflow-hidden mt-4 p-6 rounded-lg border-solid">
-              <div className="w-[135px] max-w-full text-base font-semibold whitespace-nowrap tracking-[-0.32px] leading-none">
-                Optimal
-              </div>
+              <RiskLevelDropdown
+                value={editData.powerLevel}
+                onChange={(value) => handleEdit("powerLevel", value)}
+                type="optimal"
+                editable={isEditing}
+              />
               <EditableText
                 value={editData.powerText}
                 onChange={(value) => handleEdit("powerText", value)}

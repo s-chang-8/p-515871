@@ -12,6 +12,7 @@ interface DataGridProps {
   className?: string;
   editable?: boolean;
   onEdit?: (index: number, field: "label" | "value", value: string) => void;
+  onTitleEdit?: (title: string) => void;
 }
 
 interface EditableFieldProps {
@@ -34,18 +35,13 @@ const EditableField: React.FC<EditableFieldProps> = ({ value, onChange }) => {
     onChange(tempValue);
   };
 
-  const handleFocus = () => {
-    setIsActive(true);
-    setTempValue(value);
-  };
-
   return (
     <input
       type="text"
       value={isActive ? tempValue : value}
       onChange={(e) => setTempValue(e.target.value)}
       onBlur={handleBlur}
-      onFocus={handleFocus}
+      onFocus={() => setIsActive(true)}
       className="w-full p-1 border rounded"
     />
   );
@@ -57,12 +53,38 @@ export const DataGrid: React.FC<DataGridProps> = ({
   className = "",
   editable = false,
   onEdit,
+  onTitleEdit,
 }) => {
+  const [tempTitle, setTempTitle] = useState(title);
+  const [isTitleActive, setIsTitleActive] = useState(false);
+
+  React.useEffect(() => {
+    if (!editable) {
+      setTempTitle(title);
+    }
+  }, [title, editable]);
+
+  const handleTitleBlur = () => {
+    setIsTitleActive(false);
+    onTitleEdit?.(tempTitle);
+  };
+
   return (
     <div className={`min-w-60 grow shrink w-[388px] ${className}`}>
-      <div className="text-base font-semibold leading-none tracking-[-0.32px]">
-        {title}
-      </div>
+      {editable ? (
+        <input
+          type="text"
+          value={isTitleActive ? tempTitle : title}
+          onChange={(e) => setTempTitle(e.target.value)}
+          onBlur={handleTitleBlur}
+          onFocus={() => setIsTitleActive(true)}
+          className="text-base font-semibold w-full p-1 border rounded"
+        />
+      ) : (
+        <div className="text-base font-semibold leading-none tracking-[-0.32px]">
+          {title}
+        </div>
+      )}
       <div className="w-full text-sm font-normal leading-none mt-4">
         {data.map((item, index) => (
           <div
