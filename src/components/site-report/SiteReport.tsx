@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { ChapterPanel } from "./ChapterPanel";
@@ -22,7 +21,9 @@ export const SiteReport: React.FC = () => {
       { label: "County", value: "xxxx" },
     ],
     proximityText: "Multiple airports nearby, multiple data center sites close by, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    powerText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    powerText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    overviewMapUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true",
+    proximityMapUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true",
   });
 
   const handleSave = () => {
@@ -134,7 +135,9 @@ export const SiteReport: React.FC = () => {
 
             <MapView
               className="mt-4"
-              imageUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true"
+              imageUrl={editData.overviewMapUrl}
+              editable={isEditing}
+              onImageChange={(url) => handleEdit("overviewMapUrl", url)}
             />
 
             <div className="border border-[color:var(--border-border-subtle,#F0F0F0)] shadow-[0px_1px_4px_-2px_rgba(20,20,20,0.08),0px_4px_4px_-2px_rgba(20,20,20,0.04)] bg-white flex w-full gap-[40px_64px] overflow-hidden text-black flex-wrap mt-4 p-6 rounded-lg border-solid">
@@ -185,7 +188,9 @@ export const SiteReport: React.FC = () => {
 
             <MapView
               className="mt-4"
-              imageUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true"
+              imageUrl={editData.proximityMapUrl}
+              editable={isEditing}
+              onImageChange={(url) => handleEdit("proximityMapUrl", url)}
             />
           </DataSection>
 
