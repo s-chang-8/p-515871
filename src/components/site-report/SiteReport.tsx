@@ -26,7 +26,6 @@ export const SiteReport: React.FC = () => {
   });
 
   const handleSave = () => {
-    // Here you would typically save the data to a backend
     toast.success("Changes saved successfully!");
     setIsEditing(false);
   };
@@ -48,19 +47,42 @@ export const SiteReport: React.FC = () => {
   };
 
   const EditableText = ({ value, onChange, textarea = false }: { value: string; onChange: (value: string) => void; textarea?: boolean }) => {
+    const [tempValue, setTempValue] = useState(value);
+    const [isActive, setIsActive] = useState(false);
+
+    React.useEffect(() => {
+      if (!isEditing) {
+        setTempValue(value);
+      }
+    }, [value, isEditing]);
+
+    const handleBlur = () => {
+      setIsActive(false);
+      onChange(tempValue);
+    };
+
+    const handleFocus = () => {
+      setIsActive(true);
+      setTempValue(value);
+    };
+
     if (!isEditing) return <div className="text-sm font-normal leading-5">{value}</div>;
     
     return textarea ? (
       <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={isActive ? tempValue : value}
+        onChange={(e) => setTempValue(e.target.value)}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         className="w-full p-2 border rounded-md text-sm font-normal leading-5 min-h-[100px]"
       />
     ) : (
       <input
         type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={isActive ? tempValue : value}
+        onChange={(e) => setTempValue(e.target.value)}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         className="w-full p-2 border rounded-md text-sm font-normal leading-5"
       />
     );

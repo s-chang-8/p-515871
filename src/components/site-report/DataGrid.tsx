@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 
 interface DataItem {
   label: string;
@@ -13,6 +13,43 @@ interface DataGridProps {
   editable?: boolean;
   onEdit?: (index: number, field: "label" | "value", value: string) => void;
 }
+
+interface EditableFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const EditableField: React.FC<EditableFieldProps> = ({ value, onChange }) => {
+  const [tempValue, setTempValue] = useState(value);
+  const [isActive, setIsActive] = useState(false);
+
+  React.useEffect(() => {
+    if (!isActive) {
+      setTempValue(value);
+    }
+  }, [value, isActive]);
+
+  const handleBlur = () => {
+    setIsActive(false);
+    onChange(tempValue);
+  };
+
+  const handleFocus = () => {
+    setIsActive(true);
+    setTempValue(value);
+  };
+
+  return (
+    <input
+      type="text"
+      value={isActive ? tempValue : value}
+      onChange={(e) => setTempValue(e.target.value)}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      className="w-full p-1 border rounded"
+    />
+  );
+};
 
 export const DataGrid: React.FC<DataGridProps> = ({
   title,
@@ -34,11 +71,9 @@ export const DataGrid: React.FC<DataGridProps> = ({
           >
             <div className="w-[180px]">
               {editable ? (
-                <input
-                  type="text"
+                <EditableField
                   value={item.label}
-                  onChange={(e) => onEdit?.(index, "label", e.target.value)}
-                  className="w-full p-1 border rounded"
+                  onChange={(value) => onEdit?.(index, "label", value)}
                 />
               ) : (
                 item.label
@@ -46,11 +81,9 @@ export const DataGrid: React.FC<DataGridProps> = ({
             </div>
             <div className="w-[180px]">
               {editable ? (
-                <input
-                  type="text"
+                <EditableField
                   value={item.value}
-                  onChange={(e) => onEdit?.(index, "value", e.target.value)}
-                  className="w-full p-1 border rounded"
+                  onChange={(value) => onEdit?.(index, "value", value)}
                 />
               ) : (
                 item.value
