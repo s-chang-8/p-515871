@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { ChapterPanel } from "./ChapterPanel";
@@ -9,7 +10,7 @@ import { toast } from "sonner";
 
 export const SiteReport: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({
+  const [originalData, setOriginalData] = useState({
     projectSize1: "200 MW",
     projectSize2: "200 MW",
     feasibilityText: "Located within an Opportunity Zone, the site benefits from a multitude of tax benefits.",
@@ -25,9 +26,16 @@ export const SiteReport: React.FC = () => {
     overviewMapUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true",
     proximityMapUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c757a05f7caf97f98e878e3a9dcbb2999c93a330635c7492707fc5886de6979f?placeholderIfAbsent=true",
   });
+  const [editData, setEditData] = useState(originalData);
 
   const handleSave = () => {
+    setOriginalData(editData);
     toast.success("Changes saved successfully!");
+    setIsEditing(false);
+  };
+
+  const handleExitEditing = () => {
+    setEditData(originalData);
     setIsEditing(false);
   };
 
@@ -93,7 +101,7 @@ export const SiteReport: React.FC = () => {
     <div className="bg-neutral-50 overflow-hidden">
       <SiteHeader 
         isEditing={isEditing} 
-        onEditToggle={() => setIsEditing(!isEditing)} 
+        onEditToggle={isEditing ? handleExitEditing : () => setIsEditing(true)} 
         onSave={handleSave}
       />
       <div className="flex w-full gap-6 flex-wrap px-[120px]">
