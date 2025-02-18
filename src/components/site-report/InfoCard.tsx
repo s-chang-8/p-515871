@@ -1,15 +1,20 @@
+
 import React from "react";
 
 interface InfoCardProps {
   label: string;
   value: string;
   className?: string;
+  editable?: boolean;
+  onValueChange?: (value: string) => void;
 }
 
 export const InfoCard: React.FC<InfoCardProps> = ({
   label,
   value,
   className = "",
+  editable = false,
+  onValueChange,
 }) => {
   return (
     <div
@@ -18,9 +23,18 @@ export const InfoCard: React.FC<InfoCardProps> = ({
       <div className="flex max-w-full w-[180px] items-center gap-4">
         <div className="self-stretch w-[180px] my-auto">
           <div className="text-sm font-normal leading-none">{label}</div>
-          <div className="text-base font-semibold leading-none tracking-[-0.32px] mt-1">
-            {value}
-          </div>
+          {editable ? (
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => onValueChange?.(e.target.value)}
+              className="text-base font-semibold w-full mt-1 p-1 border rounded"
+            />
+          ) : (
+            <div className="text-base font-semibold leading-none tracking-[-0.32px] mt-1">
+              {value}
+            </div>
+          )}
         </div>
       </div>
     </div>
