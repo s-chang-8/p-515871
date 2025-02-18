@@ -7,6 +7,7 @@ interface InfoCardProps {
   className?: string;
   editable?: boolean;
   onValueChange?: (value: string) => void;
+  onLabelChange?: (value: string) => void;
 }
 
 export const InfoCard: React.FC<InfoCardProps> = ({
@@ -15,24 +16,28 @@ export const InfoCard: React.FC<InfoCardProps> = ({
   className = "",
   editable = false,
   onValueChange,
+  onLabelChange,
 }) => {
   const [tempValue, setTempValue] = useState(value);
-  const [isActive, setIsActive] = useState(false);
+  const [tempLabel, setTempLabel] = useState(label);
+  const [isValueActive, setIsValueActive] = useState(false);
+  const [isLabelActive, setIsLabelActive] = useState(false);
 
   React.useEffect(() => {
     if (!editable) {
       setTempValue(value);
+      setTempLabel(label);
     }
-  }, [value, editable]);
+  }, [value, label, editable]);
 
-  const handleBlur = () => {
-    setIsActive(false);
+  const handleValueBlur = () => {
+    setIsValueActive(false);
     onValueChange?.(tempValue);
   };
 
-  const handleFocus = () => {
-    setIsActive(true);
-    setTempValue(value);
+  const handleLabelBlur = () => {
+    setIsLabelActive(false);
+    onLabelChange?.(tempLabel);
   };
 
   return (
@@ -41,14 +46,25 @@ export const InfoCard: React.FC<InfoCardProps> = ({
     >
       <div className="flex max-w-full w-[180px] items-center gap-4">
         <div className="self-stretch w-[180px] my-auto">
-          <div className="text-sm font-normal leading-none">{label}</div>
           {editable ? (
             <input
               type="text"
-              value={isActive ? tempValue : value}
+              value={isLabelActive ? tempLabel : label}
+              onChange={(e) => setTempLabel(e.target.value)}
+              onBlur={handleLabelBlur}
+              onFocus={() => setIsLabelActive(true)}
+              className="text-sm font-normal leading-none w-full p-1 border rounded"
+            />
+          ) : (
+            <div className="text-sm font-normal leading-none">{label}</div>
+          )}
+          {editable ? (
+            <input
+              type="text"
+              value={isValueActive ? tempValue : value}
               onChange={(e) => setTempValue(e.target.value)}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
+              onBlur={handleValueBlur}
+              onFocus={() => setIsValueActive(true)}
               className="text-base font-semibold w-full mt-1 p-1 border rounded"
             />
           ) : (
